@@ -43,9 +43,11 @@
                     <h2 class="text-3xl font-bold text-violet-800 mb-4 text-center print-only-title">Seu Relatório de Diagnóstico</h2>
                     <h3 class="text-xl font-semibold text-violet-800 text-center mb-4">Seu Perfil de Barreiras</h3>
                     <p id="diagnostico-summary" class="text-center text-gray-600 mb-4" aria-live="polite"></p>
-                    <div class="chart-container my-8"><canvas id="diagnostico-chart"></canvas></div>
+                    <div class="chart-wrapper flex justify-center my-8">
+                        <div class="chart-container"><canvas id="diagnostico-chart"></canvas></div>
+                    </div>
                     <div id="advice-container" class="mt-6 p-6 bg-violet-100 border-2 border-dashed border-violet-300 rounded-2xl text-violet-900 text-left">
-                        <h3 class="text-xl font-semibold mb-2">💡 Um Conselho Para Começar:</h3>
+                        <h3 class="text-xl font-semibold text-rose-900 mb-2">💡 Um Conselho Para Começar:</h3>
                         <div id="advice-text" class="text-base"></div>
                     </div>
                     <div class="text-center mt-8 no-print">
@@ -103,6 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const ctx = section.querySelector('#diagnostico-chart').getContext('2d');
                 if (state.diagChart) state.diagChart.destroy();
+                
+                // --- CORREÇÕES NO GRÁFICO APLICADAS AQUI ---
                 state.diagChart = new Chart(ctx, {
                     type: 'radar',
                     data: {
@@ -111,11 +115,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     options: {
                         plugins: { legend: { display: false } },
-                        scales: { r: { beginAtZero: true, suggestedMax: Math.max(5, maxScore + 1) } }
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                suggestedMax: Math.max(5, maxScore + 1),
+                                pointLabels: {
+                                    font: {
+                                        size: 14 // Aumenta o tamanho da fonte
+                                    }
+                                }
+                            }
+                        }
                     }
                 });
                 
-                document.getElementById('form-wrapper').classList.add('no-print');
+                document.getElementById('form-wrapper').style.display = 'none';
             },
             'print-results': () => {
                 window.print();
