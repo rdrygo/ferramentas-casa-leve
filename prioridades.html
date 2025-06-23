@@ -31,13 +31,18 @@
     <main id="app-container" class="px-4 py-12 md:px-6">
         <section id="prioridades-section">
             <div class="max-w-3xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-violet-100">
-                <div id="form-wrapper" class="no-print">
+                <div id="form-wrapper">
                     <h2 class="text-2xl font-semibold text-violet-800 mb-2 text-center">Encontre sua Prioridade</h2>
                     <p class="mb-6 text-gray-600 text-center">Dê uma nota para seu nível de satisfação em cada área, de 0 (Caos Total) a 10 (Harmonia Plena).</p>
                     <div id="prioridades-form-container" class="space-y-4"></div>
                     <div class="text-center mt-6">
                         <button data-action="show-prio-results" type="button" class="bg-violet-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-violet-700">Encontrar Meu Ponto de Partida</button>
                     </div>
+                </div>
+                <div id="tie-breaker-div" class="hidden mt-8 text-center">
+                    <h3 class="text-xl font-semibold text-violet-800 mb-2">Detectamos alguns pontos de atrito.</h3>
+                    <p class="mb-4 text-gray-600">Qual destes, se resolvido, te traria o maior alívio IMEDIATO?</p>
+                    <div id="tie-breaker-buttons" class="flex flex-col gap-3"></div>
                 </div>
                 <div id="prioridade-results" class="hidden mt-8 text-center bg-violet-100 border-2 border-dashed border-violet-400 p-6 rounded-2xl">
                     <h2 class="text-3xl font-bold text-violet-800 mb-4 text-center print-only-title">Seu Relatório de Prioridades</h2>
@@ -70,6 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `${categoryHtml}<div class="p-2 rounded-lg hover:bg-violet-50"><label class="flex justify-between items-center mb-1"><span>${item.i}</span><span id="prio-val-${index}" class="font-bold text-violet-600 w-8 text-center">5</span></label><input type="range" id="prio-${index}" data-item="${item.i}" min="0" max="10" value="5" class="w-full h-2 bg-violet-200 rounded-lg slider-thumb"></div>`;
             }).join('');
         }
+        
+        function showFinalResult(itemText) {
+            document.getElementById('prioridade-item').textContent = itemText;
+            document.getElementById('prioridade-results').classList.remove('hidden');
+            document.getElementById('form-wrapper').style.display = 'none';
+            document.getElementById('tie-breaker-div').classList.add('hidden');
+        }
 
         const handlers = {
             'show-prio-results': (button) => {
@@ -86,11 +98,32 @@ document.addEventListener('DOMContentLoaded', () => {
                         tempPriorityItems.push(slider.dataset.item);
                     }
                 });
-                
-                section.querySelector('#prioridade-item').textContent = tempPriorityItems.join(' / ') || "Nenhum item avaliado.";
-                section.querySelector('#prioridade-results').classList.remove('hidden');
 
-                document.getElementById('form-wrapper').classList.add('no-print');
+                if (tempPriorityItems.length === 1) {
+                    showFinalResult(tempPriorityItems[0]);
+                } else if (tempPriorityItems.length > 1) {
+                    const tieBreakerDiv = document.getElementById('tie-breaker-div');
+                    const tieBreakerButtons = document.getElementById('tie-breaker-buttons');
+                    tieBreakerButtons.innerHTML = ''; // Limpa botões antigos
+                    
+                    tempPriorityItems.forEach(item => {
+                        const tieButton = document.createElement('button');
+                        tieButton.className = "bg-violet-200 text-violet-800 font-semibold py-2 px-4 rounded-lg hover:bg-violet-300";
+                        tieButton.textContent = item;
+                        tieButton.dataset.action = 'select-final-priority';
+                        tieButton.dataset.item = item;
+                        tieBreakerButtons.appendChild(tieButton);
+                    });
+
+                    document.getElementById('form-wrapper').style.display = 'none';
+                    tieBreakerDiv.classList.remove('hidden');
+                } else {
+                    alert("Por favor, avalie pelo menos uma área.");
+                }
+            },
+            'select-final-priority': (button) => {
+                const selectedItem = button.dataset.item;
+                showFinalResult(selectedItem);
             },
             'print-results': () => {
                 window.print();
