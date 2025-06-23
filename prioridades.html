@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Definição de Prioridades - Casa Leve, Vida Plena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Lexend', sans-serif; }
+        .slider-thumb::-webkit-slider-thumb { background-color: #A78BFA; }
+        .slider-thumb::-moz-range-thumb { background-color: #A78BFA; }
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none; }
+            .print-only-title { display: block !important; }
+            #prioridade-results { display: block !important; }
+        }
+        .print-only-title { display: none; }
+    </style>
+</head>
+<body class="bg-violet-50 text-gray-800">
+
+    <header class="text-center py-8 px-4 bg-violet-100 border-b border-violet-200 no-print">
+        <h1 class="text-3xl md:text-4xl font-bold text-violet-800">Casa Leve, Vida Plena</h1>
+        <p class="text-lg text-violet-600 mt-2">Ferramenta 2: Definição de Prioridades</p>
+    </header>
+    
+    <main id="app-container" class="px-4 py-12 md:px-6">
+        <section id="prioridades-section">
+            <div class="max-w-3xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-violet-100">
+                <div id="form-wrapper" class="no-print">
+                    <h2 class="text-2xl font-semibold text-violet-800 mb-2 text-center">Encontre sua Prioridade</h2>
+                    <p class="mb-6 text-gray-600 text-center">Dê uma nota para seu nível de satisfação em cada área, de 0 (Caos Total) a 10 (Harmonia Plena).</p>
+                    <div id="prioridades-form-container" class="space-y-4"></div>
+                    <div class="text-center mt-6">
+                        <button data-action="show-prio-results" type="button" class="bg-violet-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-violet-700">Encontrar Meu Ponto de Partida</button>
+                    </div>
+                </div>
+                <div id="prioridade-results" class="hidden mt-8 text-center bg-violet-100 border-2 border-dashed border-violet-400 p-6 rounded-2xl">
+                    <h2 class="text-3xl font-bold text-violet-800 mb-4 text-center print-only-title">Seu Relatório de Prioridades</h2>
+                    <h3 class="text-xl font-semibold text-violet-800 mb-2">Seu Ponto de Partida é:</h3>
+                    <p id="prioridade-item" class="text-3xl font-bold text-violet-600" aria-live="polite"></p>
+                    <p class="mt-4 text-violet-700">Começar pela área de maior atrito é o que gera o maior alívio e cria o impulso para continuar.</p>
+                    <div class="text-center mt-8 no-print">
+                        <button data-action="print-results" type="button" class="bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700">Salvar ou Imprimir Relatório</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const App = (function() {
+        const prioridadesData = [
+            { c: 'Áreas Físicas', i: 'Cozinha: Bancadas e pia' }, { c: 'Áreas Físicas', i: 'Cozinha: Armários e despensa' }, { c: 'Áreas Físicas', i: 'Cozinha: Geladeira' }, { c: 'Áreas Físicas', i: 'Quarto: Guarda-roupa e gavetas' }, { c: 'Áreas Físicas', i: 'Quarto: Superfícies (criado-mudo, etc)' }, { c: 'Áreas Físicas', i: 'Banheiro(s): Pia e superfícies' }, { c: 'Áreas Físicas', i: 'Sala de Estar/Jantar' }, { c: 'Áreas Físicas', i: 'Quarto(s) das Crianças/Brinquedos' }, { c: 'Áreas Físicas', i: 'Área de Serviço / Lavanderia' }, { c: 'Áreas Físicas', i: 'Home Office / Área de Estudo' }, { c: 'Áreas Físicas', i: 'Papelada e Documentos' },
+            { c: 'Rotinas e Sistemas', i: 'Rotina da Louça: Lavar e guardar' }, { c: 'Rotinas e Sistemas', i: 'Rotina da Roupa: Lavar, secar e guardar' }, { c: 'Rotinas e Sistemas', i: 'Rotina de Alimentação: Planeamento' }, { c: 'Rotinas e Sistemas', i: 'Rotina Diária de arrumação básica' }, { c: 'Rotinas e Sistemas', i: 'Rotina Semanal: Limpeza' }, { c: 'Rotinas e Sistemas', i: 'Gestão de Agendas e Compromissos' },
+        ];
+
+        function renderForm() {
+            const container = document.getElementById('prioridades-form-container');
+            if (!container) return;
+            let currentCategory = '';
+            container.innerHTML = prioridadesData.map((item, index) => {
+                let categoryHtml = (item.c !== currentCategory) ? `<h3 class="text-lg font-semibold text-violet-700 mt-4 border-b pb-2">${item.c}</h3>` : '';
+                currentCategory = item.c;
+                return `${categoryHtml}<div class="p-2 rounded-lg hover:bg-violet-50"><label class="flex justify-between items-center mb-1"><span>${item.i}</span><span id="prio-val-${index}" class="font-bold text-violet-600 w-8 text-center">5</span></label><input type="range" id="prio-${index}" data-item="${item.i}" min="0" max="10" value="5" class="w-full h-2 bg-violet-200 rounded-lg slider-thumb"></div>`;
+            }).join('');
+        }
+
+        const handlers = {
+            'show-prio-results': (button) => {
+                const section = button.closest('section');
+                const sliders = section.querySelectorAll('input[type="range"]');
+                let minScore = 11;
+                let tempPriorityItems = [];
+                sliders.forEach(slider => {
+                    const score = parseInt(slider.value, 10);
+                    if (score < minScore) {
+                        minScore = score;
+                        tempPriorityItems = [slider.dataset.item];
+                    } else if (score === minScore) {
+                        tempPriorityItems.push(slider.dataset.item);
+                    }
+                });
+                
+                section.querySelector('#prioridade-item').textContent = tempPriorityItems.join(' / ') || "Nenhum item avaliado.";
+                section.querySelector('#prioridade-results').classList.remove('hidden');
+
+                document.getElementById('form-wrapper').classList.add('no-print');
+            },
+            'print-results': () => {
+                window.print();
+            }
+        };
+
+        function init() {
+            renderForm();
+            document.getElementById('app-container').addEventListener('click', (event) => {
+                const button = event.target.closest('button');
+                if (button?.dataset.action && typeof handlers[button.dataset.action] === 'function') {
+                    handlers[button.dataset.action](button);
+                }
+            });
+            document.getElementById('app-container').addEventListener('input', (event) => {
+                if (event.target.type === 'range') {
+                    const valueSpan = event.target.previousElementSibling.querySelector('span:last-child');
+                    if (valueSpan) valueSpan.textContent = event.target.value;
+                }
+            });
+        }
+        
+        return { init };
+    })();
+
+    App.init();
+});
+</script>
+</body>
+</html>
