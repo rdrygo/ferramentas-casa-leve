@@ -125,7 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('form-wrapper').style.display = 'none';
                     tieBreakerDiv.classList.remove('hidden');
                 } else {
-                    alert("Por favor, avalie pelo menos uma área.");
+                    // Caso nenhum slider tenha sido movido, ou todos estejam em 10, etc.
+                    showFinalResult("Nenhum ponto de atrito principal identificado. Ótimo!");
                 }
             },
             'select-final-priority': (button) => {
