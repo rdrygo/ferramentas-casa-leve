@@ -29,6 +29,13 @@
     </header>
     
     <main id="app-container" class="px-4 py-12 md:px-6">
+        <section id="intro" class="mb-12">
+            <div class="max-w-3xl mx-auto bg-white/60 p-6 rounded-2xl shadow-sm border border-violet-100">
+                <h2 class="text-2xl font-semibold text-violet-800 mb-3 text-center">Da Confusão à Clareza</h2>
+                <p class="text-gray-600 text-center">A paralisia da desordem acontece quando olhamos para a montanha inteira. O segredo é escolher uma única pedra para mover. Esta ferramenta te ajuda a encontrar exatamente por onde começar para ter o máximo de impacto com o mínimo de esforço.</p>
+            </div>
+        </section>
+
         <section id="prioridades-section">
             <div class="max-w-3xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-violet-100">
                 <div id="form-wrapper">
@@ -77,16 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         function showFinalResult(itemText) {
-            const formWrapper = document.getElementById('form-wrapper');
-            const tieBreakerDiv = document.getElementById('tie-breaker-div');
-            const resultsDiv = document.getElementById('prioridade-results');
-            
             document.getElementById('prioridade-item').textContent = itemText;
-            
-            formWrapper.classList.add('no-print');
-            formWrapper.style.display = 'none';
-            tieBreakerDiv.style.display = 'none';
-            resultsDiv.classList.remove('hidden');
+            document.getElementById('prioridade-results').classList.remove('hidden');
+            document.getElementById('form-wrapper').style.display = 'none';
+            document.getElementById('tie-breaker-div').style.display = 'none';
         }
 
         const handlers = {
@@ -110,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (tempPriorityItems.length > 1) {
                     const tieBreakerDiv = document.getElementById('tie-breaker-div');
                     const tieBreakerButtons = document.getElementById('tie-breaker-buttons');
-                    tieBreakerButtons.innerHTML = ''; // Limpa botões antigos
+                    tieBreakerButtons.innerHTML = ''; 
                     
                     tempPriorityItems.forEach(item => {
                         const tieButton = document.createElement('button');
