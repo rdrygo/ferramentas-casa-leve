@@ -53,11 +53,13 @@
                     <div class="chart-wrapper flex justify-center my-8">
                         <div class="chart-container"><canvas id="diagnostico-chart"></canvas></div>
                     </div>
-                    <div id="advice-container" class="mt-6 p-6 bg-violet-100 border-2 border-dashed border-violet-300 rounded-2xl text-violet-900">
-                        <h3 class="text-xl font-semibold text-violet-900 mb-2">💡 Um Conselho Para Começar:</h3>
-                        <div id="advice-text" class="text-base mb-4"></div>
-                        <label for="action-commitment" class="font-semibold text-violet-800">Qual será sua pequena vitória de 5 minutos hoje?</label>
-                        <textarea id="action-commitment" rows="2" class="mt-2 w-full p-2 border border-violet-300 rounded-lg focus:ring-2 focus:ring-violet-400 focus:outline-none" placeholder="Ex: 'Vou tirar tudo da minha mesa de cabeceira e limpar'..."></textarea>
+                    <div id="advice-wrapper" class="hidden">
+                        <div id="advice-container" class="mt-6 p-6 bg-violet-100 border-2 border-dashed border-violet-300 rounded-2xl text-violet-900">
+                            <h3 class="text-xl font-semibold text-violet-900 mb-2">💡 Um Conselho Para Começar:</h3>
+                            <div id="advice-text" class="text-base mb-4"></div>
+                            <label for="action-commitment" class="font-semibold text-violet-800">Qual será sua pequena vitória de 5 minutos hoje?</label>
+                            <textarea id="action-commitment" rows="2" class="mt-2 w-full p-2 border border-violet-300 rounded-lg focus:ring-2 focus:ring-violet-400 focus:outline-none" placeholder="Ex: 'Vou tirar tudo da minha mesa de cabeceira e limpar'..."></textarea>
+                        </div>
                     </div>
                     <div class="text-center mt-8 no-print">
                         <button data-action="print-results" type="button" class="bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700">Salvar ou Imprimir Relatório</button>
@@ -72,16 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const App = (function() {
         let state = { diagChart: null };
 
+        // LISTA COMPLETA DE PERGUNTAS RESTAURADA
         const diagnosticoData = [
-            { c: 'Psicológicas', t: 'Tenho dificuldade em me desfazer de objetos, mesmo sem uso, por apego ou culpa.' }, 
-            { c: 'Psicológicas', t: 'Deixo para depois por medo de não fazer um trabalho "perfeito".' }, 
-            { c: 'Psicológicas', t: 'Sinto-me paralisada só de olhar para a quantidade de coisas a organizar.' }, 
-            { c: 'Metodológicas', t: 'A bagunça parece sempre voltar, não importa o quanto eu arrume.' }, 
-            { c: 'Metodológicas', t: 'Muitos objetos na minha casa não têm um "lugar certo" para serem guardados.' }, 
-            { c: 'Metodológicas', t: 'As pequenas tarefas se acumulam porque não tenho uma rotina de organização.' },
-            { c: 'Ambientais', t: 'Sinto que o espaço físico da minha casa não é suficiente para tudo.' }, 
-            { c: 'Ambientais', t: 'Sinto que sou a única pessoa em casa que se esforça para manter a ordem.' }, 
-            { c: 'Ambientais', t: 'Sinto que meu esforço para organizar é invisível ou desfeito pelos outros.' },
+            { c: 'Psicológicas', t: 'Sinto dificuldade em me desfazer de objetos por valor sentimental, culpa ou medo.' }, { c: 'Psicológicas', t: 'Adio por medo de não fazer "perfeito" (Perfeccionismo).' }, { c: 'Psicológicas', t: 'Sinto-me paralisada pela quantidade de coisas (Sobrecarga).' }, { c: 'Psicológicas', t: 'A ideia de organizar me deixa ansiosa ou triste.' }, { c: 'Psicológicas', t: 'Guardo roupas de tamanhos que não servem mais.' }, { c: 'Psicológicas', t: 'Guardo coisas "só por via das dúvidas".' },
+            { c: 'Metodológicas', t: 'A bagunça sempre volta, pois não tenho um sistema.' }, { c: 'Metodológicas', t: 'Os objetos não têm um "lugar certo" em casa.' }, { c: 'Metodológicas', t: 'Não tenho rotinas de organização, e as tarefas se acumulam.' }, { c: 'Metodológicas', t: 'Tento arrumar tudo de uma vez, me canso e desisto.' }, { c: 'Metodológicas', t: 'Compro itens por impulso, sem pensar onde guardá-los.' }, { c: 'Metodológicas', t: 'Acredito que preciso comprar organizadores caros para começar.' },
+            { c: 'Ambientais', t: 'Sinto que minha casa é pequena demais para a quantidade de coisas que minha família tem.' }, { c: 'Ambientais', t: 'Sou a única pessoa que se importa com a organização.' }, { c: 'Ambientais', t: 'Tentar organizar ou pedir ajuda gera conflitos familiares.' }, { c: 'Ambientais', t: 'A desordem de outras pessoas desfaz meus esforços.' }, { c: 'Ambientais', t: 'Temos visões diferentes sobre o que é "organizado".' }, { c: 'Ambientais', t: 'Sinto que minhas tentativas de organizar são desrespeitadas.' },
         ];
         
         const preWrittenAdvice = {
@@ -113,10 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const maxScore = Math.max(...Object.values(scores));
                 const topBarrier = Object.keys(scores).find(key => scores[key] === maxScore && maxScore > 0) || null;
-
+                
                 section.querySelector('#diagnostico-results').classList.remove('hidden');
                 section.querySelector('#diagnostico-summary').innerHTML = topBarrier ? `Sua principal área de desafio é: <strong class="font-bold text-violet-700">${topBarrier}</strong>.` : 'Nenhuma barreira significativa selecionada.';
-                section.querySelector('#advice-text').innerHTML = preWrittenAdvice[topBarrier] || 'Selecione ao menos uma barreira para receber um conselho.';
+                
+                const adviceWrapper = section.querySelector('#advice-wrapper');
+                if (topBarrier) {
+                    section.querySelector('#advice-text').innerHTML = preWrittenAdvice[topBarrier];
+                    adviceWrapper.classList.remove('hidden');
+                } else {
+                    adviceWrapper.classList.add('hidden');
+                }
 
                 const ctx = section.querySelector('#diagnostico-chart').getContext('2d');
                 if (state.diagChart) state.diagChart.destroy();
@@ -135,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         scales: {
                             r: {
                                 beginAtZero: true,
-                                suggestedMax: Math.max(5, maxScore + 1),
+                                suggestedMax: Math.max(6, Object.values(scores).reduce((a, b) => Math.max(a, b), -Infinity) + 1),
                                 pointLabels: { font: { size: 14 } }
                             }
                         }
