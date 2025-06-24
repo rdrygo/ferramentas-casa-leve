@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Definição de Prioridades - Casa Leve, Vida Plena</title>
+    <title>Diagnóstico de Barreiras - Casa Leve, Vida Plena</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Lexend', sans-serif; }
-        .slider-thumb::-webkit-slider-thumb { background-color: #A78BFA; }
-        .slider-thumb::-moz-range-thumb { background-color: #A78BFA; }
+        .chart-container { position: relative; width: 100%; max-width: 450px; margin: auto; height: 350px; }
         @media print {
             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .no-print { display: none; }
             .print-only-title { display: block !important; }
-            #prioridade-results { display: block !important; }
+            #diagnostico-results { display: block !important; }
         }
         .print-only-title { display: none; }
     </style>
@@ -25,37 +25,42 @@
 
     <header class="text-center py-8 px-4 bg-violet-100 border-b border-violet-200 no-print">
         <h1 class="text-3xl md:text-4xl font-bold text-violet-800">Casa Leve, Vida Plena</h1>
-        <p class="text-lg text-violet-600 mt-2">Ferramenta 2: Definição de Prioridades</p>
+        <p class="text-lg text-violet-600 mt-2">Ferramenta 1: Diagnóstico de Barreiras</p>
     </header>
     
     <main id="app-container" class="px-4 py-12 md:px-6">
-        <section id="intro" class="mb-12">
+        <section id="ciencia" class="mb-12">
             <div class="max-w-3xl mx-auto bg-white/60 p-6 rounded-2xl shadow-sm border border-violet-100">
-                <h2 class="text-2xl font-semibold text-violet-800 mb-3 text-center">Da Confusão à Clareza</h2>
-                <p class="text-gray-600 text-center">A paralisia da desordem acontece quando olhamos para a montanha inteira. O segredo é escolher uma única pedra para mover. Esta ferramenta te ajuda a encontrar exatamente por onde começar para ter o máximo de impacto com o mínimo de esforço.</p>
+                <h2 class="text-2xl font-semibold text-violet-800 mb-3 text-center">Você Não Tem Culpa: A Ciência por Trás da Bagunça</h2>
+                <p class="text-gray-600 text-center">Se você já olhou para a desordem e sentiu sua mente "desligar", saiba que isso não é preguiça, é neurociência. Um ambiente caótico cria uma <strong>sobrecarga cognitiva</strong>, bombardeando seu cérebro com estímulos e dificultando o foco.</p>
             </div>
         </section>
 
-        <section id="prioridades-section">
+        <section id="diagnostico-section">
             <div class="max-w-3xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-violet-100">
                 <div id="form-wrapper">
-                    <h2 class="text-2xl font-semibold text-violet-800 mb-2 text-center">Encontre sua Prioridade</h2>
-                    <p class="mb-6 text-gray-600 text-center">Dê uma nota para seu nível de satisfação em cada área, de 0 (Caos Total) a 10 (Harmonia Plena).</p>
-                    <div id="prioridades-form-container" class="space-y-4"></div>
+                    <h2 class="text-2xl font-semibold text-violet-800 mb-2 text-center">Faça seu Diagnóstico</h2>
+                    <p class="mb-6 text-gray-600 text-center">Vamos identificar suas barreiras. Marque todas as afirmações que ressoam com você.</p>
+                    <div id="diagnostico-form-container" class="space-y-2"></div>
                     <div class="text-center mt-6">
-                        <button data-action="show-prio-results" type="button" class="bg-violet-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-violet-700">Encontrar Meu Ponto de Partida</button>
+                        <button data-action="show-diag-results" type="button" class="bg-violet-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-violet-700">Ver Meu Diagnóstico</button>
                     </div>
                 </div>
-                <div id="tie-breaker-div" class="hidden mt-8 text-center">
-                    <h3 class="text-xl font-semibold text-violet-800 mb-2">Detectamos alguns pontos de atrito.</h3>
-                    <p class="mb-4 text-gray-600">Qual destes, se resolvido, te traria o maior alívio IMEDIATO?</p>
-                    <div id="tie-breaker-buttons" class="flex flex-col gap-3"></div>
-                </div>
-                <div id="prioridade-results" class="hidden mt-8 text-center bg-violet-100 border-2 border-dashed border-violet-400 p-6 rounded-2xl">
-                    <h2 class="text-3xl font-bold text-violet-800 mb-4 text-center print-only-title">Seu Relatório de Prioridades</h2>
-                    <h3 class="text-xl font-semibold text-violet-800 mb-2">Seu Ponto de Partida é:</h3>
-                    <p id="prioridade-item" class="text-3xl font-bold text-violet-600" aria-live="polite"></p>
-                    <p class="mt-4 text-violet-700">Começar pela área de maior atrito é o que gera o maior alívio e cria o impulso para continuar.</p>
+                <div id="diagnostico-results" class="hidden mt-8">
+                    <h2 class="text-3xl font-bold text-violet-800 mb-4 text-center print-only-title">Seu Relatório de Diagnóstico</h2>
+                    <h3 class="text-xl font-semibold text-violet-800 text-center mb-4">Seu Perfil de Barreiras</h3>
+                    <p id="diagnostico-summary" class="text-center text-gray-600 mb-4" aria-live="polite"></p>
+                    <div class="chart-wrapper flex justify-center my-8">
+                        <div class="chart-container"><canvas id="diagnostico-chart"></canvas></div>
+                    </div>
+                    <div id="advice-wrapper" class="hidden">
+                        <div id="advice-container" class="mt-6 p-6 bg-violet-100 border-2 border-dashed border-violet-300 rounded-2xl text-violet-900">
+                            <h3 class="text-xl font-semibold text-violet-900 mb-2">💡 Um Conselho Para Começar:</h3>
+                            <div id="advice-text" class="text-base mb-4"></div>
+                            <label for="action-commitment" class="font-semibold text-violet-800">Qual será sua pequena vitória de 5 minutos hoje?</label>
+                            <textarea id="action-commitment" rows="2" class="mt-2 w-full p-2 border border-violet-300 rounded-lg focus:ring-2 focus:ring-violet-400 focus:outline-none" placeholder="Ex: 'Vou tirar tudo da minha mesa de cabeceira e limpar'..."></textarea>
+                        </div>
+                    </div>
                     <div class="text-center mt-8 no-print">
                         <button data-action="print-results" type="button" class="bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700">Salvar ou Imprimir Relatório</button>
                     </div>
@@ -67,71 +72,81 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const App = (function() {
-        const prioridadesData = [
-            { c: 'Áreas Físicas', i: 'Cozinha: Bancadas e pia' }, { c: 'Áreas Físicas', i: 'Cozinha: Armários e despensa' }, { c: 'Áreas Físicas', i: 'Cozinha: Geladeira' }, { c: 'Áreas Físicas', i: 'Quarto: Guarda-roupa e gavetas' }, { c: 'Áreas Físicas', i: 'Quarto: Superfícies (criado-mudo, etc)' }, { c: 'Áreas Físicas', i: 'Banheiro(s): Pia e superfícies' }, { c: 'Áreas Físicas', i: 'Sala de Estar/Jantar' }, { c: 'Áreas Físicas', i: 'Quarto(s) das Crianças/Brinquedos' }, { c: 'Áreas Físicas', i: 'Área de Serviço / Lavanderia' }, { c: 'Áreas Físicas', i: 'Home Office / Área de Estudo' }, { c: 'Áreas Físicas', i: 'Papelada e Documentos' },
-            { c: 'Rotinas e Sistemas', i: 'Rotina da Louça: Lavar e guardar' }, { c: 'Rotinas e Sistemas', i: 'Rotina da Roupa: Lavar, secar e guardar' }, { c: 'Rotinas e Sistemas', i: 'Rotina de Alimentação: Planeamento' }, { c: 'Rotinas e Sistemas', i: 'Rotina Diária de arrumação básica' }, { c: 'Rotinas e Sistemas', i: 'Rotina Semanal: Limpeza' }, { c: 'Rotinas e Sistemas', i: 'Gestão de Agendas e Compromissos' },
+        let state = { diagChart: null };
+
+        // LISTA COMPLETA DE PERGUNTAS RESTAURADA
+        const diagnosticoData = [
+            { c: 'Psicológicas', t: 'Sinto dificuldade em me desfazer de objetos por valor sentimental, culpa ou medo.' }, { c: 'Psicológicas', t: 'Adio por medo de não fazer "perfeito" (Perfeccionismo).' }, { c: 'Psicológicas', t: 'Sinto-me paralisada pela quantidade de coisas (Sobrecarga).' }, { c: 'Psicológicas', t: 'A ideia de organizar me deixa ansiosa ou triste.' }, { c: 'Psicológicas', t: 'Guardo roupas de tamanhos que não servem mais.' }, { c: 'Psicológicas', t: 'Guardo coisas "só por via das dúvidas".' },
+            { c: 'Metodológicas', t: 'A bagunça sempre volta, pois não tenho um sistema.' }, { c: 'Metodológicas', t: 'Os objetos não têm um "lugar certo" em casa.' }, { c: 'Metodológicas', t: 'Não tenho rotinas de organização, e as tarefas se acumulam.' }, { c: 'Metodológicas', t: 'Tento arrumar tudo de uma vez, me canso e desisto.' }, { c: 'Metodológicas', t: 'Compro itens por impulso, sem pensar onde guardá-los.' }, { c: 'Metodológicas', t: 'Acredito que preciso comprar organizadores caros para começar.' },
+            { c: 'Ambientais', t: 'Sinto que minha casa é pequena demais para a quantidade de coisas que minha família tem.' }, { c: 'Ambientais', t: 'Sou a única pessoa que se importa com a organização.' }, { c: 'Ambientais', t: 'Tentar organizar ou pedir ajuda gera conflitos familiares.' }, { c: 'Ambientais', t: 'A desordem de outras pessoas desfaz meus esforços.' }, { c: 'Ambientais', t: 'Temos visões diferentes sobre o que é "organizado".' }, { c: 'Ambientais', t: 'Sinto que minhas tentativas de organizar são desrespeitadas.' },
         ];
+        
+        const preWrittenAdvice = {
+            'Psicológicas': 'A paralisia que você sente vem de um lugar profundo: do medo de não fazer o "perfeito", da culpa ao se desfazer de uma memória, da sobrecarga de ter que decidir tudo. A solução não é atacar a montanha inteira. Apenas diminua o volume da autocrítica e dê a si mesma permissão para o imperfeito: guarde <strong>uma</strong> única coisa fora do lugar, mesmo que o resto continue uma bagunça.',
+            'Metodológicas': 'A desordem é o resultado de processos quebrados, não de falta de esforço. Cada objeto sem um "endereço" fixo exige uma nova decisão, esgotando sua energia mental. O segredo é criar <strong>uma</strong> regra inegociável. Exemplo: "A bancada da cozinha deve terminar o dia sempre vazia". Essa única regra te forçará a criar um lar para tudo que tentar pousar ali, consertando o sistema pela raiz.',
+            'Ambientais': 'É desgastante ser a única a remar o barco da organização, especialmente quando o espaço parece pequeno e pedir ajuda gera conflito. Pare de tentar arrumar o caos dos outros; comece a cultivar a sua própria ordem. Defina <strong>uma</strong> prateleira ou um canto como seu território sagrado de calma. Essa pequena ilha de serenidade será sua fonte de energia e, silenciosamente, mostrará o caminho para os outros, sem atritos.'
+        };
 
         function renderForm() {
-            const container = document.getElementById('prioridades-form-container');
+            const container = document.getElementById('diagnostico-form-container');
             if (!container) return;
             let currentCategory = '';
-            container.innerHTML = prioridadesData.map((item, index) => {
+            container.innerHTML = diagnosticoData.map(item => {
                 let categoryHtml = (item.c !== currentCategory) ? `<h3 class="text-lg font-semibold text-violet-700 mt-4 border-b pb-2">${item.c}</h3>` : '';
                 currentCategory = item.c;
-                return `${categoryHtml}<div class="p-2 rounded-lg hover:bg-violet-50"><label class="flex justify-between items-center mb-1"><span>${item.i}</span><span id="prio-val-${index}" class="font-bold text-violet-600 w-8 text-center">5</span></label><input type="range" id="prio-${index}" data-item="${item.i}" min="0" max="10" value="5" class="w-full h-2 bg-violet-200 rounded-lg slider-thumb"></div>`;
+                return `${categoryHtml}<label class="flex items-center p-2 rounded-lg hover:bg-violet-50 cursor-pointer"><input type="checkbox" class="mr-3 h-5 w-5" data-category="${item.c}"><span class="text-gray-700">${item.t}</span></label>`;
             }).join('');
-        }
-        
-        function showFinalResult(itemText) {
-            document.getElementById('prioridade-item').textContent = itemText;
-            document.getElementById('prioridade-results').classList.remove('hidden');
-            document.getElementById('form-wrapper').style.display = 'none';
-            document.getElementById('tie-breaker-div').style.display = 'none';
         }
 
         const handlers = {
-            'show-prio-results': (button) => {
+            'show-diag-results': (button) => {
                 const section = button.closest('section');
-                const sliders = section.querySelectorAll('input[type="range"]');
-                let minScore = 11;
-                let tempPriorityItems = [];
-                sliders.forEach(slider => {
-                    const score = parseInt(slider.value, 10);
-                    if (score < minScore) {
-                        minScore = score;
-                        tempPriorityItems = [slider.dataset.item];
-                    } else if (score === minScore) {
-                        tempPriorityItems.push(slider.dataset.item);
+                const scores = { 'Psicológicas': 0, 'Metodológicas': 0, 'Ambientais': 0 };
+                section.querySelectorAll('input[type="checkbox"]:checked').forEach(box => {
+                    if (scores.hasOwnProperty(box.dataset.category)) {
+                        scores[box.dataset.category]++;
                     }
                 });
 
-                if (tempPriorityItems.length === 1) {
-                    showFinalResult(tempPriorityItems[0]);
-                } else if (tempPriorityItems.length > 1) {
-                    const tieBreakerDiv = document.getElementById('tie-breaker-div');
-                    const tieBreakerButtons = document.getElementById('tie-breaker-buttons');
-                    tieBreakerButtons.innerHTML = ''; 
-                    
-                    tempPriorityItems.forEach(item => {
-                        const tieButton = document.createElement('button');
-                        tieButton.className = "w-full bg-violet-200 text-violet-800 font-semibold py-2 px-4 rounded-lg hover:bg-violet-300";
-                        tieButton.textContent = item;
-                        tieButton.dataset.action = 'select-final-priority';
-                        tieButton.dataset.item = item;
-                        tieBreakerButtons.appendChild(tieButton);
-                    });
-
-                    document.getElementById('form-wrapper').style.display = 'none';
-                    tieBreakerDiv.classList.remove('hidden');
+                const maxScore = Math.max(...Object.values(scores));
+                const topBarrier = Object.keys(scores).find(key => scores[key] === maxScore && maxScore > 0) || null;
+                
+                section.querySelector('#diagnostico-results').classList.remove('hidden');
+                section.querySelector('#diagnostico-summary').innerHTML = topBarrier ? `Sua principal área de desafio é: <strong class="font-bold text-violet-700">${topBarrier}</strong>.` : 'Nenhuma barreira significativa selecionada.';
+                
+                const adviceWrapper = section.querySelector('#advice-wrapper');
+                if (topBarrier) {
+                    section.querySelector('#advice-text').innerHTML = preWrittenAdvice[topBarrier];
+                    adviceWrapper.classList.remove('hidden');
                 } else {
-                    // Caso nenhum slider tenha sido movido, ou todos estejam em 10, etc.
-                    showFinalResult("Nenhum ponto de atrito principal identificado. Ótimo!");
+                    adviceWrapper.classList.add('hidden');
                 }
-            },
-            'select-final-priority': (button) => {
-                const selectedItem = button.dataset.item;
-                showFinalResult(selectedItem);
+
+                const ctx = section.querySelector('#diagnostico-chart').getContext('2d');
+                if (state.diagChart) state.diagChart.destroy();
+                
+                state.diagChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: Object.keys(scores),
+                        datasets: [{ data: Object.values(scores), backgroundColor: 'rgba(139, 92, 246, 0.2)', borderColor: 'rgba(139, 92, 246, 1)', borderWidth: 2 }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: { padding: 10 },
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                suggestedMax: Math.max(6, Object.values(scores).reduce((a, b) => Math.max(a, b), -Infinity) + 1),
+                                pointLabels: { font: { size: 14 } }
+                            }
+                        }
+                    }
+                });
+                
+                document.getElementById('form-wrapper').style.display = 'none';
             },
             'print-results': () => {
                 window.print();
@@ -144,12 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const button = event.target.closest('button');
                 if (button?.dataset.action && typeof handlers[button.dataset.action] === 'function') {
                     handlers[button.dataset.action](button);
-                }
-            });
-            document.getElementById('app-container').addEventListener('input', (event) => {
-                if (event.target.type === 'range') {
-                    const valueSpan = event.target.previousElementSibling.querySelector('span:last-child');
-                    if (valueSpan) valueSpan.textContent = event.target.value;
                 }
             });
         }
