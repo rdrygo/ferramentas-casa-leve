@@ -11,9 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Lexend', sans-serif; }
-        /* Adicionado um wrapper para ajudar na centralização */
-        .chart-wrapper { display: flex; justify-content: center; width: 100%; }
-        .chart-container { position: relative; width: 100%; max-width: 450px; height: 350px; }
+        .chart-container { position: relative; width: 100%; max-width: 450px; margin: auto; height: 350px; }
         @media print {
             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .no-print { display: none; }
@@ -31,9 +29,17 @@
     </header>
     
     <main id="app-container" class="px-4 py-12 md:px-6">
+
+        <section id="ciencia" class="mb-12">
+            <div class="max-w-3xl mx-auto bg-white/60 p-6 rounded-2xl shadow-sm border border-violet-100">
+                <h2 class="text-2xl font-semibold text-violet-800 mb-3 text-center">Você Não Tem Culpa: A Ciência por Trás da Bagunça</h2>
+                <p class="text-gray-600 text-center">Se você já olhou para a desordem e sentiu sua mente "desligar", saiba que isso não é preguiça, é neurociência. Um ambiente caótico cria uma <strong>sobrecarga cognitiva</strong>, bombardeando seu cérebro com estímulos e dificultando o foco.</p>
+            </div>
+        </section>
+
         <section id="diagnostico-section">
             <div class="max-w-3xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-violet-100">
-                <div id="form-wrapper" class="no-print">
+                <div id="form-wrapper">
                     <h2 class="text-2xl font-semibold text-violet-800 mb-2 text-center">Faça seu Diagnóstico</h2>
                     <p class="mb-6 text-gray-600 text-center">Vamos identificar suas barreiras. Marque todas as afirmações que ressoam com você.</p>
                     <div id="diagnostico-form-container" class="space-y-2"></div>
@@ -45,13 +51,11 @@
                     <h2 class="text-3xl font-bold text-violet-800 mb-4 text-center print-only-title">Seu Relatório de Diagnóstico</h2>
                     <h3 class="text-xl font-semibold text-violet-800 text-center mb-4">Seu Perfil de Barreiras</h3>
                     <p id="diagnostico-summary" class="text-center text-gray-600 mb-4" aria-live="polite"></p>
-                    <div class="chart-wrapper my-8">
-                        <div class="chart-container">
-                            <canvas id="diagnostico-chart"></canvas>
-                        </div>
+                    <div class="chart-wrapper flex justify-center my-8">
+                        <div class="chart-container"><canvas id="diagnostico-chart"></canvas></div>
                     </div>
                     <div id="advice-container" class="mt-6 p-6 bg-violet-100 border-2 border-dashed border-violet-300 rounded-2xl text-violet-900 text-left">
-                        <h3 class="text-xl font-semibold text-rose-900 mb-2">💡 Um Conselho Para Começar:</h3>
+                        <h3 class="text-xl font-semibold text-violet-900 mb-2">💡 Um Conselho Para Começar:</h3>
                         <div id="advice-text" class="text-base"></div>
                     </div>
                     <div class="text-center mt-8 no-print">
@@ -59,6 +63,12 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section id="conclusao" class="mt-12 no-print">
+             <div class="max-w-3xl mx-auto text-center text-gray-600">
+                <p>Parabéns por dar o primeiro passo! Identificar o problema é 50% da solução. Com esta clareza, você já está no caminho para uma casa mais leve e uma vida mais plena.</p>
+             </div>
         </section>
     </main>
 
@@ -119,21 +129,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        layout: {
-                            padding: 10 // Adiciona um respiro para as labels
-                        },
-                        plugins: { 
-                            legend: { display: false }
-                        },
+                        layout: { padding: 5 },
+                        plugins: { legend: { display: false } },
                         scales: {
                             r: {
                                 beginAtZero: true,
-                                suggestedMax: Math.max(5, maxScore + 1),
-                                pointLabels: {
-                                    font: {
-                                        size: 14 // Tamanho da fonte legível
-                                    }
-                                }
+                                suggestedMax: Math.max(6, maxScore + 1),
+                                pointLabels: { font: { size: 14 } }
                             }
                         }
                     }
