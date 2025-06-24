@@ -29,7 +29,6 @@
     </header>
     
     <main id="app-container" class="px-4 py-12 md:px-6">
-
         <section id="ciencia" class="mb-12">
             <div class="max-w-3xl mx-auto bg-white/60 p-6 rounded-2xl shadow-sm border border-violet-100">
                 <h2 class="text-2xl font-semibold text-violet-800 mb-3 text-center">Você Não Tem Culpa: A Ciência por Trás da Bagunça</h2>
@@ -54,21 +53,17 @@
                     <div class="chart-wrapper flex justify-center my-8">
                         <div class="chart-container"><canvas id="diagnostico-chart"></canvas></div>
                     </div>
-                    <div id="advice-container" class="mt-6 p-6 bg-violet-100 border-2 border-dashed border-violet-300 rounded-2xl text-violet-900 text-left">
+                    <div id="advice-container" class="mt-6 p-6 bg-violet-100 border-2 border-dashed border-violet-300 rounded-2xl text-violet-900">
                         <h3 class="text-xl font-semibold text-violet-900 mb-2">💡 Um Conselho Para Começar:</h3>
-                        <div id="advice-text" class="text-base"></div>
+                        <div id="advice-text" class="text-base mb-4"></div>
+                        <label for="action-commitment" class="font-semibold text-violet-800">Qual será sua pequena vitória de 5 minutos hoje?</label>
+                        <textarea id="action-commitment" rows="2" class="mt-2 w-full p-2 border border-violet-300 rounded-lg focus:ring-2 focus:ring-violet-400 focus:outline-none" placeholder="Ex: 'Vou tirar tudo da minha mesa de cabeceira e limpar'..."></textarea>
                     </div>
                     <div class="text-center mt-8 no-print">
                         <button data-action="print-results" type="button" class="bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700">Salvar ou Imprimir Relatório</button>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section id="conclusao" class="mt-12 no-print">
-             <div class="max-w-3xl mx-auto text-center text-gray-600">
-                <p>Parabéns por dar o primeiro passo! Identificar o problema é 50% da solução. Com esta clareza, você já está no caminho para uma casa mais leve e uma vida mais plena.</p>
-             </div>
         </section>
     </main>
 
@@ -78,9 +73,15 @@ document.addEventListener('DOMContentLoaded', () => {
         let state = { diagChart: null };
 
         const diagnosticoData = [
-            { c: 'Psicológicas', t: 'Sinto dificuldade em me desfazer de objetos por valor sentimental, culpa ou medo.' }, { c: 'Psicológicas', t: 'Adio por medo de não fazer "perfeito" (Perfeccionismo).' }, { c: 'Psicológicas', t: 'Sinto-me paralisada pela quantidade de coisas (Sobrecarga).' }, { c: 'Psicológicas', t: 'A ideia de organizar me deixa ansiosa ou triste.' }, { c: 'Psicológicas', t: 'Guardo roupas de tamanhos que não servem mais.' }, { c: 'Psicológicas', t: 'Guardo coisas "só por via das dúvidas".' },
-            { c: 'Metodológicas', t: 'A bagunça sempre volta, pois não tenho um sistema.' }, { c: 'Metodológicas', t: 'Os objetos não têm um "lugar certo" em casa.' }, { c: 'Metodológicas', t: 'Não tenho rotinas de organização, e as tarefas se acumulam.' }, { c: 'Metodológicas', t: 'Tento arrumar tudo de uma vez, me canso e desisto.' }, { c: 'Metodológicas', t: 'Compro itens por impulso, sem pensar onde guardá-los.' }, { c: 'Metodológicas', t: 'Acredito que preciso comprar organizadores caros para começar.' },
-            { c: 'Ambientais', t: 'Sinto que minha casa é pequena demais para a quantidade de coisas que minha família tem.' }, { c: 'Ambientais', t: 'Sou a única pessoa que se importa com a organização.' }, { c: 'Ambientais', t: 'Tentar organizar ou pedir ajuda gera conflitos familiares.' }, { c: 'Ambientais', t: 'A desordem de outras pessoas desfaz meus esforços.' }, { c: 'Ambientais', t: 'Temos visões diferentes sobre o que é "organizado".' }, { c: 'Ambientais', t: 'Sinto que minhas tentativas de organizar são desrespeitadas.' },
+            { c: 'Psicológicas', t: 'Tenho dificuldade em me desfazer de objetos, mesmo sem uso, por apego ou culpa.' }, 
+            { c: 'Psicológicas', t: 'Deixo para depois por medo de não fazer um trabalho "perfeito".' }, 
+            { c: 'Psicológicas', t: 'Sinto-me paralisada só de olhar para a quantidade de coisas a organizar.' }, 
+            { c: 'Metodológicas', t: 'A bagunça parece sempre voltar, não importa o quanto eu arrume.' }, 
+            { c: 'Metodológicas', t: 'Muitos objetos na minha casa não têm um "lugar certo" para serem guardados.' }, 
+            { c: 'Metodológicas', t: 'As pequenas tarefas se acumulam porque não tenho uma rotina de organização.' },
+            { c: 'Ambientais', t: 'Sinto que o espaço físico da minha casa não é suficiente para tudo.' }, 
+            { c: 'Ambientais', t: 'Sinto que sou a única pessoa em casa que se esforça para manter a ordem.' }, 
+            { c: 'Ambientais', t: 'Sinto que meu esforço para organizar é invisível ou desfeito pelos outros.' },
         ];
         
         const preWrittenAdvice = {
@@ -129,12 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        layout: { padding: 5 },
+                        layout: { padding: 10 },
                         plugins: { legend: { display: false } },
                         scales: {
                             r: {
                                 beginAtZero: true,
-                                suggestedMax: Math.max(6, maxScore + 1),
+                                suggestedMax: Math.max(5, maxScore + 1),
                                 pointLabels: { font: { size: 14 } }
                             }
                         }
